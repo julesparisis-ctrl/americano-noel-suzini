@@ -1,0 +1,659 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+ <meta charset="UTF-8" />
+ <title>TV – Americano de Noël</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <style>
+   :root{
+     --red:#b71c1c;
+     --white:#fff;
+     --bg:#0f1115;
+     --panel:#141822;
+     --line:rgba(255,255,255,0.10);
+     --muted:rgba(255,255,255,0.70);
+     --soft:rgba(255,255,255,0.08);
+     --ok:#2e7d32;
+     --warn:#f9a825;
+
+     /* IMPORTANT : hauteur fixe du bandeau TV */
+     --headerH: 72px;
+
+     /* Compactage pour éviter toute coupe */
+     --pad: 10px;
+     --gap: 10px;
+
+     --titleSize: 24px;
+
+     --panelTitleSize: 18px;
+     --panelTitlePadV: 8px;
+     --panelTitlePadH: 12px;
+
+     --cardPadV: 8px;
+     --cardPadH: 10px;
+
+     --teamsSize: 18px;
+     --scoreSize: 14px;
+     --scoreStrong: 18px;
+     --benchSize: 12px;
+
+     --rankFont: 15px;
+     --rankHeaderFont: 13px;
+   }
+
+   html, body { height: 100%; }
+   body{
+     margin:0;
+     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+     background: var(--bg);
+     color: var(--white);
+     overflow:hidden; /* TV: pas de scroll global */
+   }
+
+   /* ===== HEADER avec images symétriques et hauteur fixe ===== */
+   header{
+     height: var(--headerH);
+     background: var(--red);
+     color: var(--white);
+     position: relative;
+     display:flex;
+     align-items:center;
+     justify-content:center;
+     box-sizing: border-box;
+     padding: 0 92px; /* réserve de place pour les images gauche/droite */
+   }
+   .header-title{
+     text-align:center;
+     font-weight: 800;
+     letter-spacing: 0.3px;
+     font-size: var(--titleSize);
+     line-height: 1.1;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     max-width: 100%;
+   }
+   .header-img{
+     position:absolute;
+     top: 50%;
+     transform: translateY(-50%);
+     width: 56px;
+     height: 56px;
+     object-fit: contain;
+     border-radius: 8px;
+     background: rgba(255,255,255,0.12);
+     border: 1px solid rgba(255,255,255,0.20);
+   }
+   .header-img.left { left: 12px; }
+   .header-img.right { right: 12px; }
+
+   /* ===== LAYOUT ===== */
+   .layout{
+     height: calc(100vh - var(--headerH));
+     display:flex;
+     gap: var(--gap);
+     padding: var(--pad);
+     box-sizing: border-box;
+   }
+
+   /* 2/3 - 1/3 */
+   .left{
+     flex: 2;
+     display:flex;
+     flex-direction: column;
+     gap: var(--gap);
+     min-width: 0;
+     min-height: 0;
+   }
+   .right{
+     flex: 1;
+     display:flex;
+     flex-direction: column;
+     gap: var(--gap);
+     min-width: 0;
+     min-height: 0;
+   }
+
+   .panel{
+     background: var(--panel);
+     border: 1px solid var(--line);
+     border-radius: 12px;
+     overflow:hidden;
+     min-height: 0;
+     display:flex;
+     flex-direction: column;
+   }
+
+   .panel-title{
+     display:flex;
+     align-items:center;
+     justify-content: space-between;
+     padding: var(--panelTitlePadV) var(--panelTitlePadH);
+     background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.00));
+     border-bottom: 1px solid var(--line);
+     font-weight: 800;
+     font-size: var(--panelTitleSize);
+     flex: 0 0 auto;
+   }
+   .panel-title small{
+     font-weight: 600;
+     color: var(--muted);
+     font-size: 13px;
+     white-space: nowrap;
+   }
+
+   /* ===== MATCHS (gauche) ===== */
+   .matches-grid{
+     flex: 1 1 auto;
+     display:flex;
+     flex-direction: column;
+     gap: 8px;
+     padding: 8px 10px 10px 10px;
+     box-sizing: border-box;
+     overflow:hidden; /* pas de scroll, mais on fait tout rentrer */
+     min-height: 0;
+   }
+
+   .match-card{
+     border: 1px solid var(--line);
+     border-radius: 10px;
+     padding: var(--cardPadV) var(--cardPadH);
+     background: rgba(255,255,255,0.03);
+   }
+
+   .match-header{
+     display:flex;
+     justify-content: space-between;
+     align-items:center;
+     font-size: 13px;
+     color: var(--muted);
+     margin-bottom: 6px;
+     gap: 10px;
+   }
+
+   .pill{
+     padding: 3px 8px;
+     border-radius: 999px;
+     background: var(--soft);
+     border: 1px solid var(--line);
+     color: var(--muted);
+     font-weight: 700;
+     font-size: 12px;
+     white-space: nowrap;
+     flex: 0 0 auto;
+   }
+   .pill.ok{ border-color: rgba(46,125,50,0.45); color: rgba(210,255,210,0.9); }
+   .pill.warn{ border-color: rgba(249,168,37,0.45); color: rgba(255,243,200,0.95); }
+
+   .teams{
+     font-size: var(--teamsSize);
+     font-weight: 800;
+     line-height: 1.12;
+     margin-bottom: 6px;
+     word-break: break-word;
+   }
+
+   .score{
+     display:flex;
+     justify-content: space-between;
+     align-items:center;
+     gap: 10px;
+     font-size: var(--scoreSize);
+     color: var(--muted);
+   }
+   .score strong{
+     color: var(--white);
+     font-size: var(--scoreStrong);
+     white-space: nowrap;
+   }
+
+   .bench{
+     margin-top: 4px;
+     font-size: var(--benchSize);
+     color: var(--muted);
+     border-top: 1px dashed var(--line);
+     padding-top: 6px;
+     line-height: 1.15;
+   }
+
+   .empty{
+     padding: 12px 10px;
+     color: var(--muted);
+     font-size: 14px;
+   }
+
+   /* ===== CLASSEMENT (droite) ===== */
+   .rank-wrap{
+     display:flex;
+     flex-direction: column;
+     flex: 1 1 auto;
+     min-height: 0;
+   }
+
+   .rank-scroll{
+     flex: 1 1 auto;
+     overflow:hidden; /* TV: pas de scroll */
+     min-height: 0;
+   }
+
+   .rank-table{
+     width: 100%;
+     border-collapse: collapse;
+     font-size: var(--rankFont);
+   }
+   .rank-table th,
+   .rank-table td{
+     border-bottom: 1px solid var(--line);
+     padding: 7px 10px;
+     text-align: left;
+     white-space: nowrap;
+   }
+   .rank-table td:nth-child(2){
+     white-space: normal; /* noms sur 2 lignes si besoin */
+   }
+   .rank-table th{
+     font-size: var(--rankHeaderFont);
+     color: var(--muted);
+     font-weight: 800;
+     background: rgba(255,255,255,0.03);
+   }
+
+   .rank-note{
+     padding: 8px 12px 10px 12px;
+     color: var(--muted);
+     font-size: 12px;
+     border-top: 1px solid var(--line);
+     background: rgba(255,255,255,0.02);
+     flex: 0 0 auto;
+   }
+
+   .rank-mode{
+     display:flex;
+     align-items:center;
+     gap: 8px;
+     min-width: 0;
+   }
+   .rank-mode .pill{
+     max-width: 150px;
+     overflow:hidden;
+     text-overflow: ellipsis;
+   }
+
+   /* ===== Ajustements iPad / TV ===== */
+   @media (max-width: 1100px){
+     :root{
+       --headerH: 68px;
+       --titleSize: 22px;
+
+       --panelTitleSize: 17px;
+       --teamsSize: 17px;
+       --scoreStrong: 17px;
+
+       --rankFont: 14px;
+     }
+     .header-img{ width: 52px; height: 52px; }
+     header{ padding: 0 88px; }
+   }
+ </style>
+</head>
+
+<body>
+<header>
+ <!-- Remplace ces fichiers par tes images (mêmes noms) -->
+ <img class="header-img left"  src="logo-suzini.png" alt="Logo TC Suzini" />
+ <div class="header-title">TV – Americano de Noël – Beach Tennis Suzini</div>
+ <img class="header-img right" src="beach-noel.png" alt="Beach Noël" />
+</header>
+
+<div class="layout">
+ <!-- GAUCHE : Matchs (2/3) -->
+ <div class="left">
+   <div class="panel" style="flex: 1.05;">
+     <div class="panel-title">
+       <span>Dernier tour</span>
+       <small id="prevRoundLabel">—</small>
+     </div>
+     <div id="prevRoundContent" class="matches-grid">
+       <div class="empty">Aucun match précédent trouvé.</div>
+     </div>
+   </div>
+
+   <div class="panel" style="flex: 1.25;">
+     <div class="panel-title">
+       <span>Tour en cours</span>
+       <small id="curRoundLabel">—</small>
+     </div>
+     <div id="curRoundContent" class="matches-grid">
+       <div class="empty">Aucun match pour le moment.</div>
+     </div>
+   </div>
+
+   <div class="panel" style="flex: 1.05;">
+     <div class="panel-title">
+       <span>Tour à venir</span>
+       <small id="nextRoundLabel">—</small>
+     </div>
+     <div id="nextRoundContent" class="matches-grid">
+       <div class="empty">Aucun match à venir enregistré.</div>
+     </div>
+   </div>
+ </div>
+
+ <!-- DROITE : Classement (1/3) -->
+ <div class="right">
+   <div class="panel" style="flex: 1;">
+     <div class="panel-title">
+       <div class="rank-mode">
+         <span>Classement</span>
+         <span class="pill" id="rankModePill">Général</span>
+       </div>
+       <small id="rankHint">Rotation auto</small>
+     </div>
+
+     <div class="rank-wrap">
+       <div class="rank-scroll" id="rankContainer">
+         <div class="empty">Aucun joueur pour le moment.</div>
+       </div>
+       <div class="rank-note">
+         Total = Points BT + Points Beach-Noël + Bonus/Malus
+       </div>
+     </div>
+   </div>
+ </div>
+</div>
+
+<script type="module">
+ // --- Firebase imports ---
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+ import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+ import {
+   getFirestore,
+   collection,
+   onSnapshot,
+   query,
+   orderBy
+ } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+ // --- Config Firebase (la tienne) ---
+ const firebaseConfig = {
+   apiKey: "AIzaSyB8BS8_Z7-vUVkVZcHhWxUzP62KkB1I4M4",
+   authDomain: "americano-noel-suzini.firebaseapp.com",
+   projectId: "americano-noel-suzini",
+   storageBucket: "americano-noel-suzini.firebasestorage.app",
+   messagingSenderId: "925339847006",
+   appId: "1:925339847006:web:ce952f6db6fc5ded7527cf",
+   measurementId: "G-LG0BQ9V11J"
+ };
+
+ const app = initializeApp(firebaseConfig);
+ getAnalytics(app);
+ const db = getFirestore(app);
+
+ // Collections
+ const playersCol = collection(db, "players");
+ const matchesCol = collection(db, "matches");
+
+ // Cache
+ let playersCache = [];
+ let matchesCache = [];
+
+ // DOM
+ const prevRoundContent = document.getElementById("prevRoundContent");
+ const curRoundContent  = document.getElementById("curRoundContent");
+ const nextRoundContent = document.getElementById("nextRoundContent");
+
+ const prevRoundLabel = document.getElementById("prevRoundLabel");
+ const curRoundLabel  = document.getElementById("curRoundLabel");
+ const nextRoundLabel = document.getElementById("nextRoundLabel");
+
+ const rankContainer = document.getElementById("rankContainer");
+ const rankModePill = document.getElementById("rankModePill");
+
+ // --- Helpers ---
+ function safeNum(x){ return typeof x === "number" && !Number.isNaN(x) ? x : 0; }
+
+ function getRoundsMap() {
+   const roundsMap = {};
+   matchesCache.forEach(m => {
+     const r = m.roundNumber;
+     if (typeof r !== "number") return;
+     if (!roundsMap[r]) roundsMap[r] = { matches: [], allValidated: true };
+     roundsMap[r].matches.push(m);
+     if (m.validated !== true) roundsMap[r].allValidated = false;
+   });
+   return roundsMap;
+ }
+
+ function getRoundCreatedAtMin(matchesOfRound){
+   let min = Infinity;
+   matchesOfRound.forEach(m => {
+     const t = typeof m.createdAt === "number" ? m.createdAt : Date.now();
+     if (t < min) min = t;
+   });
+   return isFinite(min) ? min : null;
+ }
+
+ function getBenchPlayersForRoundUI(roundNumber){
+   if (!roundNumber || !playersCache.length || !matchesCache.length) return [];
+   const matchesOfRound = matchesCache.filter(m => m.roundNumber === roundNumber);
+   if (!matchesOfRound.length) return [];
+
+   const roundCreatedAtMin = getRoundCreatedAtMin(matchesOfRound);
+   if (!roundCreatedAtMin) return [];
+
+   const playersInMatches = new Set();
+   matchesOfRound.forEach(m => {
+     (m.teamA || []).forEach(n => playersInMatches.add(n));
+     (m.teamB || []).forEach(n => playersInMatches.add(n));
+   });
+
+   const bench = [];
+   playersCache.forEach(p => {
+     const name = p.name;
+     if (!name) return;
+
+     const createdAt = typeof p.createdAt === "number" ? p.createdAt : 0;
+     const leftRound = typeof p.leftRound === "number" ? p.leftRound : null;
+     const returnRound = typeof p.returnRound === "number" ? p.returnRound : null;
+
+     if (createdAt && createdAt > roundCreatedAtMin) return;
+
+     if (typeof leftRound === "number") {
+       if (typeof returnRound === "number" && returnRound > leftRound) {
+         if (roundNumber > leftRound && roundNumber < returnRound) return;
+       } else {
+         if (roundNumber > leftRound) return;
+       }
+     }
+
+     if (playersInMatches.has(name)) return;
+     bench.push(name);
+   });
+
+   bench.sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
+   return bench;
+ }
+
+ function renderMatchCards(container, matches, showBenchForRoundNumber=null, emptyLabel=null){
+   if (!matches.length){
+     container.innerHTML = `<div class="empty">${emptyLabel || "Aucun match."}</div>`;
+     return;
+   }
+
+   container.innerHTML = "";
+
+   matches.forEach(m => {
+     const card = document.createElement("div");
+     card.className = "match-card";
+
+     const isValidated = m.validated === true;
+     const pill = document.createElement("span");
+     pill.className = "pill " + (isValidated ? "ok" : "warn");
+     pill.textContent = isValidated ? "Validé" : "En cours";
+
+     const header = document.createElement("div");
+     header.className = "match-header";
+     header.innerHTML = `<span>Tour ${m.roundNumber} • Terrain ${m.court ?? "-"}</span>`;
+     header.appendChild(pill);
+
+     const teams = document.createElement("div");
+     teams.className = "teams";
+     teams.textContent = `${(m.teamA || []).join(" & ")}  vs  ${(m.teamB || []).join(" & ")}`;
+
+     const score = document.createElement("div");
+     score.className = "score";
+     const a = (m.scoreA === null || m.scoreA === undefined) ? "—" : String(m.scoreA);
+     const b = (m.scoreB === null || m.scoreB === undefined) ? "—" : String(m.scoreB);
+     score.innerHTML = `<span>Score</span><strong>${a} – ${b}</strong>`;
+
+     card.appendChild(header);
+     card.appendChild(teams);
+     card.appendChild(score);
+     container.appendChild(card);
+   });
+
+   if (showBenchForRoundNumber){
+     const bench = getBenchPlayersForRoundUI(showBenchForRoundNumber);
+     const benchDiv = document.createElement("div");
+     benchDiv.className = "bench";
+     benchDiv.textContent = bench.length
+       ? `Banc : ${bench.join(", ")}`
+       : "Banc : aucun.";
+     container.appendChild(benchDiv);
+   }
+ }
+
+ function renderRounds() {
+   if (!matchesCache.length){
+     prevRoundLabel.textContent = "—";
+     curRoundLabel.textContent = "—";
+     nextRoundLabel.textContent = "—";
+     prevRoundContent.innerHTML = `<div class="empty">Aucun match précédent trouvé.</div>`;
+     curRoundContent.innerHTML  = `<div class="empty">Aucun match pour le moment.</div>`;
+     nextRoundContent.innerHTML = `<div class="empty">Aucun match à venir enregistré.</div>`;
+     return;
+   }
+
+   const roundsMap = getRoundsMap();
+   const roundNumbers = Object.keys(roundsMap).map(Number).sort((a,b)=>a-b);
+   if (!roundNumbers.length) return;
+
+   const unvalidatedRounds = roundNumbers.filter(r => !roundsMap[r].allValidated);
+   const validatedRounds   = roundNumbers.filter(r => roundsMap[r].allValidated);
+
+   let currentRoundNumber = null;
+   if (unvalidatedRounds.length) currentRoundNumber = Math.min(...unvalidatedRounds);
+
+   let previousRoundNumber = null;
+   if (currentRoundNumber !== null) {
+     const prevCandidates = validatedRounds.filter(r => r < currentRoundNumber);
+     if (prevCandidates.length) previousRoundNumber = Math.max(...prevCandidates);
+   } else if (validatedRounds.length) {
+     previousRoundNumber = Math.max(...validatedRounds);
+   }
+
+   let nextRoundNumber = null;
+   if (currentRoundNumber !== null) {
+     const nextCandidates = unvalidatedRounds.filter(r => r > currentRoundNumber);
+     if (nextCandidates.length) nextRoundNumber = Math.min(...nextCandidates);
+   }
+
+   prevRoundLabel.textContent = previousRoundNumber !== null ? `Tour ${previousRoundNumber}` : "—";
+   curRoundLabel.textContent  = currentRoundNumber  !== null ? `Tour ${currentRoundNumber}`  : "—";
+   nextRoundLabel.textContent = nextRoundNumber     !== null ? `Tour ${nextRoundNumber}`     : "—";
+
+   const prevMatches = previousRoundNumber !== null ? roundsMap[previousRoundNumber].matches : [];
+   const curMatches  = currentRoundNumber  !== null ? roundsMap[currentRoundNumber].matches  : [];
+   const nextMatches = nextRoundNumber     !== null ? roundsMap[nextRoundNumber].matches     : [];
+
+   renderMatchCards(prevRoundContent, prevMatches, previousRoundNumber, "Aucun match précédent trouvé.");
+   renderMatchCards(curRoundContent,  curMatches,  currentRoundNumber,  "Aucun match pour le moment.");
+   renderMatchCards(nextRoundContent, nextMatches, nextRoundNumber,     "Aucun match à venir enregistré.");
+ }
+
+ // --- Classements ---
+ function enrichPlayers(players){
+   return players.map(p => {
+     const pointsBT = safeNum(p.pointsGeneral);
+     const pointsNoel = safeNum(p.pointsNoel);
+     const bonusMalus = safeNum(p.bonusMalus);
+     const total = pointsBT + pointsNoel + bonusMalus;
+     return { ...p, pointsBT, pointsNoel, bonusMalus, total };
+   });
+ }
+
+ function buildRankingTable(list, mode){
+   if (!list.length) return `<div class="empty">Aucun joueur pour le moment.</div>`;
+
+   // TV: TOP sans scroll
+   const TOP = 12;
+   const shown = list.slice(0, TOP);
+
+   if (mode === "NOEL"){
+     let html = `<table class="rank-table">
+       <thead><tr><th>#</th><th>Nom</th><th>Pts Beach-Noël</th></tr></thead><tbody>`;
+     shown.forEach((p, i) => {
+       html += `<tr><td>${i+1}</td><td>${p.name || ""}</td><td>${p.pointsNoel}</td></tr>`;
+     });
+     html += `</tbody></table>`;
+     return html;
+   }
+
+   let html = `<table class="rank-table">
+     <thead><tr><th>#</th><th>Nom</th><th>Total</th></tr></thead><tbody>`;
+   shown.forEach((p, i) => {
+     html += `<tr><td>${i+1}</td><td>${p.name || ""}</td><td>${p.total}</td></tr>`;
+   });
+   html += `</tbody></table>`;
+   return html;
+ }
+
+ const rankingModes = [
+   { key:"GENERAL", label:"Général" },
+   { key:"WOMEN",   label:"Femmes" },
+   { key:"MEN",     label:"Hommes" },
+   { key:"NOEL",    label:"Beach-Noël" }
+ ];
+ let currentRankModeIndex = 0;
+
+ function renderRanking(){
+   const mode = rankingModes[currentRankModeIndex];
+   rankModePill.textContent = mode.label;
+
+   const enriched = enrichPlayers(playersCache);
+   const general = [...enriched].sort((a,b)=> b.total - a.total);
+   const men = general.filter(p => p.gender === "H");
+   const women = general.filter(p => p.gender === "F");
+   const noel = [...enriched].sort((a,b)=> b.pointsNoel - a.pointsNoel);
+
+   let list = general;
+   if (mode.key === "MEN") list = men;
+   if (mode.key === "WOMEN") list = women;
+   if (mode.key === "NOEL") list = noel;
+
+   rankContainer.innerHTML = buildRankingTable(list, mode.key);
+ }
+
+ // Rotation auto du classement
+ const ROTATE_MS = 8000;
+ setInterval(() => {
+   currentRankModeIndex = (currentRankModeIndex + 1) % rankingModes.length;
+   renderRanking();
+ }, ROTATE_MS);
+
+ // --- Firestore listeners ---
+ const playersQuery = query(playersCol, orderBy("createdAt", "asc"));
+ onSnapshot(playersQuery, (snapshot) => {
+   playersCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+   renderRanking();
+ });
+
+ const matchesQuery = query(matchesCol, orderBy("createdAt", "asc"));
+ onSnapshot(matchesQuery, (snapshot) => {
+   matchesCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+   renderRounds();
+ });
+</script>
+</body>
+</html>
