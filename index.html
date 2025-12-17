@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+ <meta charset="UTF-8" />
+ <title>Americano de Noël – Beach Tennis Suzini</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <style>
+   :root{
+     --red:#b71c1c;
+     --bg:#f5f5f5;
+     --card:#ffffff;
+     --text:#111;
+     --muted:#666;
+     --line:#e6e6e6;
+   }
+   body{
+     margin:0;
+     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+     background: var(--bg);
+     color: var(--text);
+   }
+   header{
+     background: var(--red);
+     color:#fff;
+     padding: 12px 14px;
+     text-align:center;
+     font-weight: 800;
+   }
+   .container{
+     max-width: 900px;
+     margin: 0 auto;
+     padding: 12px;
+   }
+   .card{
+     background: var(--card);
+     border: 1px solid var(--line);
+     border-radius: 10px;
+     padding: 12px;
+     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+     margin-bottom: 12px;
+   }
+   .grid{
+     display:grid;
+     grid-template-columns: 1fr;
+     gap: 10px;
+   }
+   @media (min-width: 720px){
+     .grid{ grid-template-columns: 1fr 1fr; }
+   }
+   a.btn{
+     display:block;
+     text-decoration:none;
+     border: 1px solid var(--line);
+     border-radius: 10px;
+     padding: 12px;
+     background:#fff;
+     color: var(--text);
+   }
+   a.btn:hover{ box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+   .title{
+     font-weight: 900;
+     margin: 0 0 4px 0;
+   }
+   .desc{
+     margin:0;
+     color: var(--muted);
+     font-size: 13px;
+     line-height: 1.35;
+   }
+   .tag{
+     display:inline-block;
+     margin-top: 8px;
+     font-size: 12px;
+     padding: 3px 8px;
+     border-radius: 999px;
+     border: 1px solid var(--line);
+     color: var(--muted);
+   }
+   .warn{
+     border-color: rgba(183,28,28,0.35);
+     color: rgba(183,28,28,0.9);
+     background: rgba(183,28,28,0.06);
+   }
+   footer{
+     text-align:center;
+     color: var(--muted);
+     font-size: 12px;
+     padding: 8px 0 16px 0;
+   }
+   .small{
+     font-size: 12px;
+     color: var(--muted);
+     margin: 0;
+     line-height: 1.4;
+   }
+ </style>
+</head>
+<body>
+ <header>Americano de Noël – Beach Tennis Suzini</header>
+
+ <div class="container">
+   <div class="card">
+     <p class="small">
+       Choisis une page à ouvrir. <br/>
+       <strong>Mobile</strong> / <strong>TV</strong> = consultation en temps réel (Firestore).<br/>
+       <strong>Admin</strong> et <strong>Jury</strong> = saisie (à réserver aux personnes autorisées).
+     </p>
+   </div>
+
+   <div class="grid">
+     <!-- ⚠️ Mets ici les vrais noms de fichiers -->
+     <a class="btn" href="mobile.html">
+       <div class="title">📱 Mobile (public)</div>
+       <p class="desc">Matchs • Classements • Statistiques • Règlement (FR/BR). Lecture seule.</p>
+       <span class="tag">Consultation</span>
+     </a>
+
+     <a class="btn" href="tv.html">
+       <div class="title">📺 TV</div>
+       <p class="desc">Affichage plein écran : dernier tour • tour en cours • tour à venir + rotation des classements.</p>
+       <span class="tag">Consultation</span>
+     </a>
+
+     <a class="btn" href="jury-beach-noel.html">
+       <div class="title">🎄 Jury Beach-Noël</div>
+       <p class="desc">Saisie des notes (1–20), bonus auto, validation finale, remise à zéro après clôture.</p>
+       <span class="tag warn">Accès réservé</span>
+     </a>
+
+     <a class="btn" href="admin.html">
+       <div class="title">🛠️ Admin</div>
+       <p class="desc">Gestion joueurs • génération tours • saisie scores • validation tours • calcul points.</p>
+       <span class="tag warn">Accès réservé</span>
+     </a>
+   </div>
+
+   <div class="card">
+     <p class="small">
+       Astuce : si tu veux, on peut aussi ajouter une redirection automatique :
+       <em>mobile</em> sur téléphone, <em>tv</em> sur grand écran.
+     </p>
+   </div>
+
+   <footer>TC Suzini – Commission Beach Tennis</footer>
+ </div>
+</body>
+</html>
