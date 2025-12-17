@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+ <meta charset="UTF-8" />
+ <title>Americano de Noël</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <style>
+   body {
+     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+     margin: 0;
+     padding: 0;
+     background: #f5f5f5;
+   }
+   header {
+     background: #b71c1c;
+     color: #fff;
+     padding: 10px 12px;
+     font-weight: bold;
+   }
+
+   /* Header avec logo gauche / titre centre / image droite */
+   .header-inner{
+     display:flex;
+     align-items:center;
+     justify-content:space-between;
+     gap:10px;
+   }
+   .header-side{
+     width:64px;
+     display:flex;
+     align-items:center;
+     justify-content:center;
+     flex:0 0 64px;
+   }
+   .header-side img{
+     max-width:64px;
+     max-height:34px;
+     width:auto;
+     height:auto;
+     display:block;
+     object-fit:contain;
+   }
+   .header-title{
+     flex:1;
+     text-align:center;
+     line-height:1.15;
+     font-size:15px;
+     padding:0 6px;
+     word-break:break-word;
+   }
+
+   .container {
+     padding: 10px;
+     max-width: 1000px;
+     margin: 0 auto;
+   }
+
+   /* Tabs principaux */
+   .tabs {
+     display: flex;
+     gap: 6px;
+     margin-bottom: 10px;
+     flex-wrap: wrap;
+   }
+   .tab-button {
+     flex: 1;
+     padding: 8px;
+     border: none;
+     background: #e0e0e0;
+     cursor: pointer;
+     font-size: 14px;
+     border-radius: 4px;
+   }
+   .tab-button.active {
+     background: #b71c1c;
+     color: #fff;
+     font-weight: 600;
+   }
+   .tab-content {
+     display: none;
+     background: #fff;
+     border-radius: 6px;
+     padding: 10px;
+     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+   }
+   .tab-content.active {
+     display: block;
+   }
+
+   h2 {
+     font-size: 18px;
+     margin-top: 0;
+   }
+   h3 {
+     font-size: 16px;
+     margin-bottom: 4px;
+     margin-top: 12px;
+   }
+
+   /* Matchs */
+   .subtabs {
+     display: flex;
+     gap: 6px;
+     margin-bottom: 8px;
+     margin-top: 4px;
+   }
+   .subtab-button {
+     flex: 1;
+     padding: 6px;
+     border: none;
+     background: #e0e0e0;
+     cursor: pointer;
+     font-size: 13px;
+     border-radius: 4px;
+   }
+   .subtab-button.active {
+     background: #757575;
+     color: #fff;
+     font-weight: 500;
+   }
+   .subtab-content {
+     display: none;
+   }
+   .subtab-content.active {
+     display: block;
+   }
+
+   .round-section {
+     border: 1px solid #ddd;
+     border-radius: 4px;
+     padding: 6px;
+     margin-bottom: 8px;
+     background: #fafafa;
+   }
+   .round-section h4 {
+     margin: 0 0 4px 0;
+     font-size: 14px;
+   }
+   .match-card {
+     border: 1px solid #ddd;
+     border-radius: 4px;
+     padding: 6px;
+     margin-bottom: 6px;
+     background: #fff;
+   }
+   .match-header {
+     display: flex;
+     justify-content: space-between;
+     font-size: 13px;
+     margin-bottom: 4px;
+   }
+   .match-teams {
+     font-size: 13px;
+     margin-bottom: 4px;
+   }
+   .small-label {
+     font-size: 12px;
+     color: #555;
+   }
+
+   table {
+     width: 100%;
+     border-collapse: collapse;
+     font-size: 12px;
+   }
+   th, td {
+     border: 1px solid #ddd;
+     padding: 4px;
+     text-align: left;
+   }
+   th {
+     background: #f0f0f0;
+   }
+
+   .note {
+     font-size: 11px;
+     color: #777;
+     margin-top: 4px;
+   }
+
+   /* Sous-onglets Classements */
+   .rank-subtabs {
+     display: flex;
+     gap: 6px;
+     margin-bottom: 8px;
+     margin-top: 4px;
+   }
+   .rank-subtab-button {
+     flex: 1;
+     padding: 6px;
+     border: none;
+     background: #e0e0e0;
+     cursor: pointer;
+     font-size: 13px;
+     border-radius: 4px;
+   }
+   .rank-subtab-button.active {
+     background: #757575;
+     color: #fff;
+     font-weight: 500;
+   }
+   .rank-subtab-content {
+     display: none;
+   }
+   .rank-subtab-content.active {
+     display: block;
+   }
+
+   /* Sous-onglets Statistiques */
+   .stats-subtabs {
+     display: flex;
+     gap: 6px;
+     margin-bottom: 8px;
+     margin-top: 4px;
+   }
+   .stats-subtab-button {
+     flex: 1;
+     padding: 6px;
+     border: none;
+     background: #e0e0e0;
+     cursor: pointer;
+     font-size: 13px;
+     border-radius: 4px;
+   }
+   .stats-subtab-button.active {
+     background: #757575;
+     color: #fff;
+     font-weight: 500;
+   }
+   .stats-subtab-content {
+     display: none;
+   }
+   .stats-subtab-content.active {
+     display: block;
+   }
+
+   /* Règlement */
+   .reglement {
+     line-height: 1.35;
+   }
+   .reglement h1 {
+     font-size: 18px;
+     margin: 0 0 8px 0;
+   }
+   .reglement h2 {
+     font-size: 15px;
+     margin: 12px 0 6px 0;
+   }
+   .reglement h3 {
+     font-size: 14px;
+     margin: 10px 0 4px 0;
+   }
+   .reglement p, .reglement li {
+     font-size: 13px;
+     color: #222;
+   }
+   .reglement ul {
+     margin-top: 4px;
+     margin-bottom: 8px;
+     padding-left: 18px;
+   }
+   .lang-switch {
+     display: flex;
+     gap: 8px;
+     align-items: center;
+     justify-content: flex-end;
+     margin-bottom: 8px;
+   }
+   .flag-btn {
+     border: 1px solid #ddd;
+     background: #fff;
+     border-radius: 999px;
+     padding: 6px 10px;
+     cursor: pointer;
+     font-size: 14px;
+   }
+   .flag-btn.active {
+     border-color: #b71c1c;
+     box-shadow: 0 0 0 2px rgba(183,28,28,0.15);
+     font-weight: 600;
+   }
+ </style>
+</head>
+<body>
+<header>
+ <div class="header-inner">
+   <div class="header-side">
+     <img src="logo.png" alt="Logo" />
+   </div>
+   <div class="header-title">Americano de Noël – Beach Tennis Suzini</div>
+   <div class="header-side">
+     <img src="image.png" alt="Image" />
+   </div>
+ </div>
+</header>
+
+<div class="container">
+ <!-- Onglets principaux -->
+ <div class="tabs">
+   <button class="tab-button active" data-tab="matchesTab">Matchs</button>
+   <button class="tab-button" data-tab="rankingsTab">Classements</button>
+   <button class="tab-button" data-tab="statsTab">Statistiques</button>
+   <button class="tab-button" data-tab="reglementTab">Règlement</button>
+ </div>
+
+ <!-- Onglet Matchs -->
+ <div id="matchesTab" class="tab-content active">
+   <h2>Matchs</h2>
+
+   <!-- Sous-onglets Matchs -->
+   <div class="subtabs">
+     <button class="subtab-button active" data-subtab="roundsView">Tours (Dernier / en cours / à venir)</button>
+     <button class="subtab-button" data-subtab="historyView">Historique des matchs</button>
+   </div>
+
+   <!-- Vue Tours -->
+   <div id="roundsView" class="subtab-content active">
+
+     <!-- 1. Dernier tour -->
+     <div class="round-section">
+       <h4>Dernier tour</h4>
+       <div id="previousRoundContainer">
+         <p class="small-label">Aucun match précédent trouvé.</p>
+       </div>
+     </div>
+
+     <!-- 2. Tour en cours -->
+     <div class="round-section">
+       <h4>Tour en cours</h4>
+       <div id="currentRoundContainer">
+         <p class="small-label">Aucun match pour le moment.</p>
+       </div>
+     </div>
+
+     <!-- 3. Tour à venir -->
+     <div class="round-section">
+       <h4>Tour à venir</h4>
+       <div id="nextRoundContainer">
+         <p class="small-label">Aucun match à venir enregistré.</p>
+       </div>
+     </div>
+
+     <p class="note">
+       Page en consultation : les matchs sont synchronisés en temps réel depuis Firestore.
+     </p>
+   </div>
+
+   <!-- Vue Historique -->
+   <div id="historyView" class="subtab-content">
+     <h3>Historique des matchs</h3>
+     <div id="matchesHistoryContainer">
+       <p class="small-label">Aucun match enregistré pour le moment.</p>
+     </div>
+   </div>
+ </div>
+
+ <!-- Onglet Classements -->
+ <div id="rankingsTab" class="tab-content">
+   <h2>Classements</h2>
+   <p class="note">
+     Classement basé sur les points BT, les points Beach-Noël et les bonus/malus (total = BT + Beach-Noël + bonus/malus).<br />
+     Les points Beach-Noël peuvent évoluer tant que le jury n’a pas validé définitivement.
+   </p>
+
+   <!-- Sous-onglets Classements -->
+   <div class="rank-subtabs">
+     <button class="rank-subtab-button active" data-rank-subtab="rankingGeneral">Général</button>
+     <button class="rank-subtab-button" data-rank-subtab="rankingMen">Hommes</button>
+     <button class="rank-subtab-button" data-rank-subtab="rankingWomen">Femmes</button>
+     <button class="rank-subtab-button" data-rank-subtab="rankingNoel">Noël</button>
+   </div>
+
+   <div id="rankingGeneral" class="rank-subtab-content active"></div>
+   <div id="rankingMen" class="rank-subtab-content"></div>
+   <div id="rankingWomen" class="rank-subtab-content"></div>
+   <div id="rankingNoel" class="rank-subtab-content"></div>
+ </div>
+
+ <!-- Onglet Statistiques -->
+ <div id="statsTab" class="tab-content">
+   <h2>Statistiques</h2>
+   <p class="note">
+     Statistiques avancées : points BT par tour, nombre de matchs joués (réels / virtuels),
+     partenaires et adversaires. Basé uniquement sur les tours validés.
+   </p>
+
+   <!-- Sous-onglets Statistiques -->
+   <div class="stats-subtabs">
+     <button class="stats-subtab-button active" data-stats-subtab="statsPointsPerRound">Points BT par tour</button>
+     <button class="stats-subtab-button" data-stats-subtab="statsMatchesPlayed">Matchs joués</button>
+     <button class="stats-subtab-button" data-stats-subtab="statsPartners">Partenaires</button>
+     <button class="stats-subtab-button" data-stats-subtab="statsOpponents">Adversaires</button>
+   </div>
+
+   <div id="statsPointsPerRound" class="stats-subtab-content active"></div>
+   <div id="statsMatchesPlayed" class="stats-subtab-content"></div>
+   <div id="statsPartners" class="stats-subtab-content"></div>
+   <div id="statsOpponents" class="stats-subtab-content"></div>
+ </div>
+
+ <!-- Onglet Règlement -->
+ <div id="reglementTab" class="tab-content">
+   <div class="lang-switch">
+     <button id="btnLangFR" class="flag-btn active" title="Français">🇫🇷 FR</button>
+     <button id="btnLangBR" class="flag-btn" title="Português (Brasil)">🇧🇷 BR</button>
+   </div>
+
+   <!-- FR -->
+   <div id="reglementFR" class="reglement">
+     <section class="reglement">
+       <h1>Règlement – Americano de Noël</h1>
+       <p>L’Americano de Noël est un tournoi convivial organisé dans l’esprit Beach-Noël. Le but est de jouer un maximum de rotations, de varier les partenaires et adversaires, et de partager un moment festif.</p>
+
+       <h2>1. Format du tournoi</h2>
+       <p>Le tournoi se joue sur <strong>2 terrains</strong>. Les joueurs disputent des <strong>mini-matchs en double</strong>. Chaque tour dure <strong>6 minutes</strong> et se joue en <strong>tie-break continu</strong>.</p>
+
+       <h2>2. Alternance des types de tours</h2>
+       <ul>
+         <li>tour mixte, puis</li>
+         <li>tour hommes/femmes.</li>
+       </ul>
+       <p>Si l’alternance ne peut pas être respectée (effectif insuffisant), le tour est adapté, tout en comptant dans l’alternance.</p>
+
+       <h2>3. Participation des joueurs</h2>
+       <p>Pas d’inscription préalable. Arrivées et départs libres. Maximum <strong>8 joueurs par tour</strong>. Tout joueur non retiré reste considéré comme disponible.</p>
+
+       <h2>4. Constitution des équipes</h2>
+       <ul>
+         <li>Varier au maximum les partenaires et adversaires</li>
+         <li>Équilibrer le temps de jeu</li>
+       </ul>
+
+       <h2>5. Déroulement d’un tour</h2>
+       <p>Chaque tour dure <strong>6 minutes</strong> en <strong>tie-break continu</strong>. Les scores sont saisis à la fin du tour.</p>
+
+       <h2>6. Système de points</h2>
+
+       <h3>6.1 Joueurs qui jouent</h3>
+       <p>Ils marquent le nombre exact de points remportés pendant les 6 minutes.</p>
+
+       <h3>6.2 Joueurs sur le banc</h3>
+       <p>Ils marquent la moyenne des points des équipes ayant joué le tour.</p>
+
+       <h3>6.3 Arrivées tardives</h3>
+       <p>Pour chaque tour passé avant leur arrivée : <strong>(plus petit score du tour − 2)</strong>.</p>
+
+       <h3>6.4 Départs anticipés</h3>
+       <p>Pour chaque tour joué après leur départ : <strong>(plus petit score du tour − 2)</strong>.</p>
+
+       <h3>6.5 Bonus Esprit Beach-Noël</h3>
+       <p>Un jury indépendant attribue une note Beach-Noël entre <strong>1 et 20</strong>, en fonction de la tenue, de l’originalité, de l’esprit festif et de l’implication dans le thème Beach-Noël.</p>
+
+       <p>Un bonus est appliqué selon le classement provisoire :</p>
+       <ul>
+         <li>1er : +30 pts</li>
+         <li>2e : +20 pts</li>
+         <li>3e : +15 pts</li>
+         <li>4e : +10 pts</li>
+         <li>5e : +7 pts</li>
+         <li>6e : +4 pts</li>
+         <li>7e : +2 pts</li>
+         <li>8e : +1 pt</li>
+         <li>à partir du 9e : 0 pt</li>
+       </ul>
+
+       <p><strong>Points Beach-Noël = Note Beach-Noël + Bonus Beach-Noël</strong>.</p>
+       <p>Le jury peut modifier les notes à tout moment jusqu’à validation finale. Les points Beach-Noël sont intégrés au classement général.</p>
+
+       <h2>7. Gestion du temps de jeu</h2>
+       <p>Priorité aux joueurs ayant le moins joué. Les arrivées tardives débutent avec un temps de jeu virtuel égal à la moyenne des autres.</p>
+
+       <h2>8. Classement final</h2>
+       <p>Classement basé sur tous les points cumulés. En cas d’égalité : nombre de tours joués, puis moyenne de points, puis tirage au sort.</p>
+
+       <h2>9. Buffet dînatoire partagé</h2>
+       <p>En complément de l’offre proposée par le PSK, un buffet dînatoire convivial sera mis en place. Il sera agrémenté par l’ensemble des participants : chacun est libre d’apporter ce qui lui fait plaisir, afin de contribuer à l’esprit de partage et de convivialité de la soirée Beach-Noël.</p>
+
+       <h2>10. Esprit du tournoi</h2>
+       <p>Convivialité, fair-play, plaisir du jeu et ambiance festive Beach-Noël.</p>
+     </section>
+   </div>
+
+   <!-- BR -->
+   <div id="reglementBR" class="reglement" style="display:none;">
+     <section class="reglement">
+       <h1>Regulamento – Americano de Natal</h1>
+       <p>O Americano de Natal é um torneio amistoso no espírito “Beach-Natal”. O objetivo é jogar o máximo de rotações, variar parceiros e adversários e compartilhar um momento festivo.</p>
+
+       <h2>1. Formato do torneio</h2>
+       <p>O torneio é disputado em <strong>2 quadras</strong>. Os jogadores fazem <strong>mini-jogos de duplas</strong>. Cada rodada dura <strong>6 minutos</strong> e é jogada em <strong>tie-break contínuo</strong>.</p>
+
+       <h2>2. Alternância dos tipos de rodada</h2>
+       <ul>
+         <li>rodada mista, depois</li>
+         <li>rodada masculina/feminina.</li>
+       </ul>
+       <p>Se a alternância não puder ser respeitada (número insuficiente de participantes), a rodada é adaptada, mas ainda conta na alternância.</p>
+
+       <h2>3. Participação dos jogadores</h2>
+       <p>Sem inscrição prévia. Chegadas e saídas livres. Máximo de <strong>8 jogadores por rodada</strong>. Todo jogador não removido continua sendo considerado disponível.</p>
+
+       <h2>4. Formação das duplas</h2>
+       <ul>
+         <li>Variar ao máximo parceiros e adversários</li>
+         <li>Equilibrar o tempo de jogo</li>
+       </ul>
+
+       <h2>5. Como funciona uma rodada</h2>
+       <p>Cada rodada dura <strong>6 minutos</strong> em <strong>tie-break contínuo</strong>. Os placares são registrados ao final da rodada.</p>
+
+       <h2>6. Sistema de pontuação</h2>
+
+       <h3>6.1 Jogadores que jogam</h3>
+       <p>Marcam exatamente o número de pontos conquistados durante os 6 minutos.</p>
+
+       <h3>6.2 Jogadores no banco</h3>
+       <p>Marcam a média dos pontos das equipes que jogaram a rodada.</p>
+
+       <h3>6.3 Chegadas tardias</h3>
+       <p>Para cada rodada ocorrida antes da chegada: <strong>(menor placar da rodada − 2)</strong>.</p>
+
+       <h3>6.4 Saídas antecipadas</h3>
+       <p>Para cada rodada após a saída: <strong>(menor placar da rodada − 2)</strong>.</p>
+
+       <h3>6.5 Bônus “Espírito Beach-Natal”</h3>
+       <p>Um júri independente atribui uma nota Beach-Natal entre <strong>1 e 20</strong>, de acordo com o traje, a originalidade, o espírito festivo e o engajamento no tema Beach-Natal.</p>
+
+       <p>Um bônus é aplicado conforme o ranking provisório:</p>
+       <ul>
+         <li>1º: +30 pts</li>
+         <li>2º: +20 pts</li>
+         <li>3º: +15 pts</li>
+         <li>4º: +10 pts</li>
+         <li>5º: +7 pts</li>
+         <li>6º: +4 pts</li>
+         <li>7º: +2 pts</li>
+         <li>8º: +1 pt</li>
+         <li>a partir do 9º: 0 pt</li>
+       </ul>
+
+       <p><strong>Pontos Beach-Natal = Nota Beach-Natal + Bônus Beach-Natal</strong>.</p>
+       <p>O júri pode modificar as notas a qualquer momento até a validação final. Os pontos Beach-Natal são integrados ao ranking geral.</p>
+
+       <h2>7. Gestão do tempo de jogo</h2>
+       <p>Prioridade para quem jogou menos. Chegadas tardias começam com um tempo de jogo virtual igual à média dos outros.</p>
+
+       <h2>8. Classificação final</h2>
+       <p>Classificação baseada em todos os pontos acumulados. Em caso de empate: número de rodadas jogadas, depois média de pontos, depois sorteio.</p>
+
+       <h2>9. Buffet/jantar compartilhado</h2>
+       <p>Além da oferta proposta pelo PSK, haverá um buffet/jantar colaborativo. Ele será enriquecido por todos os participantes: cada um é livre para trazer o que quiser, contribuindo para o espírito de partilha e convivência da noite Beach-Natal.</p>
+
+       <h2>10. Espírito do torneio</h2>
+       <p>Convivialidade, fair-play, prazer do jogo e clima festivo Beach-Natal.</p>
+     </section>
+   </div>
+
+ </div>
+</div>
+
+<script type="module">
+ // --- Firebase imports (lecture seule) ---
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+ import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+ import {
+   getFirestore,
+   collection,
+   onSnapshot,
+   query,
+   orderBy
+ } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+ // --- Config Firebase (la tienne) ---
+ const firebaseConfig = {
+   apiKey: "AIzaSyB8BS8_Z7-vUVkVZcHhWxUzP62KkB1I4M4",
+   authDomain: "americano-noel-suzini.firebaseapp.com",
+   projectId: "americano-noel-suzini",
+   storageBucket: "americano-noel-suzini.firebasestorage.app",
+   messagingSenderId: "925339847006",
+   appId: "1:925339847006:web:ce952f6db6fc5ded7527cf",
+   measurementId: "G-LG0BQ9V11J"
+ };
+
+ const app = initializeApp(firebaseConfig);
+ getAnalytics(app);
+ const db = getFirestore(app);
+
+ // === Gestion des onglets principaux ===
+ const tabButtons = document.querySelectorAll(".tab-button");
+ const tabContents = document.querySelectorAll(".tab-content");
+
+ tabButtons.forEach(btn => {
+   btn.addEventListener("click", () => {
+     const target = btn.getAttribute("data-tab");
+     tabButtons.forEach(b => b.classList.remove("active"));
+     tabContents.forEach(c => c.classList.remove("active"));
+     btn.classList.add("active");
+     document.getElementById(target).classList.add("active");
+   });
+ });
+
+ // === Sous-onglets Matchs ===
+ const subtabButtons = document.querySelectorAll("#matchesTab .subtab-button");
+ const subtabContents = document.querySelectorAll("#matchesTab .subtab-content");
+
+ subtabButtons.forEach(btn => {
+   btn.addEventListener("click", () => {
+     const target = btn.getAttribute("data-subtab");
+     subtabButtons.forEach(b => b.classList.remove("active"));
+     subtabContents.forEach(c => c.classList.remove("active"));
+     btn.classList.add("active");
+     document.getElementById(target).classList.add("active");
+   });
+ });
+
+ // === Sous-onglets Classements ===
+ const rankSubtabButtons = document.querySelectorAll("#rankingsTab .rank-subtab-button");
+ const rankSubtabContents = document.querySelectorAll("#rankingsTab .rank-subtab-content");
+
+ rankSubtabButtons.forEach(btn => {
+   btn.addEventListener("click", () => {
+     const target = btn.getAttribute("data-rank-subtab");
+     rankSubtabButtons.forEach(b => b.classList.remove("active"));
+     rankSubtabContents.forEach(c => c.classList.remove("active"));
+     btn.classList.add("active");
+     document.getElementById(target).classList.add("active");
+   });
+ });
+
+ // === Sous-onglets Statistiques ===
+ const statsSubtabButtons = document.querySelectorAll("#statsTab .stats-subtab-button");
+ const statsSubtabContents = document.querySelectorAll("#statsTab .stats-subtab-content");
+
+ statsSubtabButtons.forEach(btn => {
+   btn.addEventListener("click", () => {
+     const target = btn.getAttribute("data-stats-subtab");
+     statsSubtabButtons.forEach(b => b.classList.remove("active"));
+     statsSubtabContents.forEach(c => c.classList.remove("active"));
+     btn.classList.add("active");
+     document.getElementById(target).classList.add("active");
+   });
+ });
+
+ // === Switch langue règlement ===
+ const btnLangFR = document.getElementById("btnLangFR");
+ const btnLangBR = document.getElementById("btnLangBR");
+ const regFR = document.getElementById("reglementFR");
+ const regBR = document.getElementById("reglementBR");
+
+ function setLang(lang) {
+   if (lang === "FR") {
+     btnLangFR.classList.add("active");
+     btnLangBR.classList.remove("active");
+     regFR.style.display = "";
+     regBR.style.display = "none";
+   } else {
+     btnLangBR.classList.add("active");
+     btnLangFR.classList.remove("active");
+     regBR.style.display = "";
+     regFR.style.display = "none";
+   }
+ }
+ btnLangFR.addEventListener("click", () => setLang("FR"));
+ btnLangBR.addEventListener("click", () => setLang("BR"));
+
+ // === Données (cache) ===
+ const playersCol = collection(db, "players");
+ const matchesCol = collection(db, "matches");
+
+ let playersCache = [];
+ let matchesCache = [];
+
+ // Conteneurs match
+ const currentRoundContainer = document.getElementById("currentRoundContainer");
+ const previousRoundContainer = document.getElementById("previousRoundContainer");
+ const nextRoundContainer = document.getElementById("nextRoundContainer");
+ const matchesHistoryContainer = document.getElementById("matchesHistoryContainer");
+
+ // Conteneurs classements
+ const rankingGeneralEl = document.getElementById("rankingGeneral");
+ const rankingMenEl = document.getElementById("rankingMen");
+ const rankingWomenEl = document.getElementById("rankingWomen");
+ const rankingNoelEl = document.getElementById("rankingNoel");
+
+ // Conteneurs stats
+ const statsPointsPerRoundEl = document.getElementById("statsPointsPerRound");
+ const statsMatchesPlayedEl = document.getElementById("statsMatchesPlayed");
+ const statsPartnersEl = document.getElementById("statsPartners");
+ const statsOpponentsEl = document.getElementById("statsOpponents");
+
+ // --- Helper scoring (identique logique admin, lecture seule) ---
+ function buildScoringData() {
+   const result = { roundNumbers: [], roundsInfo: {}, perPlayer: {} };
+   if (!playersCache.length || !matchesCache.length) return result;
+
+   const roundsInfo = {};
+   matchesCache.forEach(m => {
+     if (m.validated !== true) return;
+     const r = m.roundNumber;
+     if (typeof r !== "number") return;
+
+     if (!roundsInfo[r]) {
+       roundsInfo[r] = {
+         teamScores: [],
+         playersInMatch: new Set(),
+         createdAtMin: typeof m.createdAt === "number" ? m.createdAt : Date.now()
+       };
+     }
+
+     const info = roundsInfo[r];
+     const cat = typeof m.createdAt === "number" ? m.createdAt : Date.now();
+     if (cat < info.createdAtMin) info.createdAtMin = cat;
+
+     if (typeof m.scoreA === "number") info.teamScores.push(m.scoreA);
+     if (typeof m.scoreB === "number") info.teamScores.push(m.scoreB);
+
+     (m.teamA || []).forEach(n => info.playersInMatch.add(n));
+     (m.teamB || []).forEach(n => info.playersInMatch.add(n));
+   });
+
+   const roundNumbers = Object.keys(roundsInfo).map(Number).sort((a,b)=>a-b);
+   if (!roundNumbers.length) return result;
+
+   roundNumbers.forEach(r => {
+     const info = roundsInfo[r];
+     if (!info.teamScores.length) {
+       info.minScore = 0;
+       info.avgScore = 0;
+     } else {
+       let sum = 0;
+       let min = info.teamScores[0];
+       info.teamScores.forEach(s => { sum += s; if (s < min) min = s; });
+       info.minScore = min;
+       info.avgScore = Math.round(sum / info.teamScores.length);
+     }
+   });
+
+   const roundsPlayedByPlayer = {};
+   matchesCache.forEach(m => {
+     if (m.validated !== true) return;
+     const r = m.roundNumber;
+     if (typeof r !== "number") return;
+     const allPlayers = (m.teamA || []).concat(m.teamB || []);
+     allPlayers.forEach(name => {
+       if (!roundsPlayedByPlayer[name]) roundsPlayedByPlayer[name] = new Set();
+       roundsPlayedByPlayer[name].add(r);
+     });
+   });
+
+   const playerMeta = {};
+   playersCache.forEach(p => {
+     const name = p.name;
+     if (!name) return;
+     const createdAt = typeof p.createdAt === "number" ? p.createdAt : 0;
+     const leftRound = typeof p.leftRound === "number" ? p.leftRound : null;
+     const returnRound = typeof p.returnRound === "number" ? p.returnRound : null;
+
+     let arrivalRound = null;
+     for (const r of roundNumbers) {
+       const info = roundsInfo[r];
+       if (!createdAt || createdAt <= info.createdAtMin) { arrivalRound = r; break; }
+     }
+     if (arrivalRound === null) arrivalRound = (roundNumbers[roundNumbers.length - 1] || 0) + 1;
+
+     playerMeta[name] = {
+       ref: p,
+       createdAt,
+       leftRound,
+       returnRound,
+       arrivalRound,
+       roundsPlayedSet: roundsPlayedByPlayer[name] || new Set()
+     };
+   });
+
+   const perPlayer = {};
+   Object.keys(playerMeta).forEach(name => {
+     const meta = playerMeta[name];
+     perPlayer[name] = {
+       ref: meta.ref,
+       pointsPerRound: {},
+       typePerRound: {},
+       totalBT: 0,
+       matchesReal: 0,
+       matchesVirtual: 0,
+       partners: {},
+       opponents: {},
+       arrivalRound: meta.arrivalRound,
+       leftRound: meta.leftRound,
+       returnRound: meta.returnRound
+     };
+   });
+
+   matchesCache.forEach(m => {
+     if (m.validated !== true) return;
+     const teamA = m.teamA || [];
+     const teamB = m.teamB || [];
+
+     teamA.forEach(name => {
+       if (!perPlayer[name]) return;
+       teamA.forEach(part => {
+         if (part === name) return;
+         perPlayer[name].partners[part] = (perPlayer[name].partners[part] || 0) + 1;
+       });
+       teamB.forEach(opp => {
+         perPlayer[name].opponents[opp] = (perPlayer[name].opponents[opp] || 0) + 1;
+       });
+     });
+
+     teamB.forEach(name => {
+       if (!perPlayer[name]) return;
+       teamB.forEach(part => {
+         if (part === name) return;
+         perPlayer[name].partners[part] = (perPlayer[name].partners[part] || 0) + 1;
+       });
+       teamA.forEach(opp => {
+         perPlayer[name].opponents[opp] = (perPlayer[name].opponents[opp] || 0) + 1;
+       });
+     });
+   });
+
+   roundNumbers.forEach(r => {
+     const info = roundsInfo[r];
+     const minMinus2 = info.minScore - 2;
+
+     playersCache.forEach(p => {
+       const name = p.name;
+       if (!name || !perPlayer[name]) return;
+
+       const meta = playerMeta[name];
+       const entry = perPlayer[name];
+
+       const arrivalRound = meta.arrivalRound;
+       const leftRound = meta.leftRound;
+       const returnRound = meta.returnRound;
+       const playedSet = meta.roundsPlayedSet;
+
+       let type;
+       if (r < arrivalRound) type = "absentBefore";
+       else {
+         let absentSegment = false;
+         if (typeof leftRound === "number") {
+           if (typeof returnRound === "number" && returnRound > leftRound) {
+             if (r > leftRound && r < returnRound) absentSegment = true;
+           } else {
+             if (r > leftRound) absentSegment = true;
+           }
+         }
+         if (absentSegment) type = "absentAfter";
+         else if (playedSet.has(r)) type = "played";
+         else type = "bench";
+       }
+
+       let toAdd = 0;
+       if (type === "played") {
+         let playerScore = 0;
+         matchesCache.forEach(m => {
+           if (m.validated !== true || m.roundNumber !== r) return;
+           if ((m.teamA || []).includes(name)) playerScore = typeof m.scoreA === "number" ? m.scoreA : 0;
+           else if ((m.teamB || []).includes(name)) playerScore = typeof m.scoreB === "number" ? m.scoreB : 0;
+         });
+         toAdd = playerScore;
+         entry.matchesReal += 1;
+       } else if (type === "bench") {
+         toAdd = info.avgScore;
+       } else {
+         toAdd = minMinus2;
+       }
+
+       entry.pointsPerRound[r] = (entry.pointsPerRound[r] || 0) + toAdd;
+       entry.totalBT += toAdd;
+       entry.typePerRound[r] = type;
+     });
+   });
+
+   Object.keys(perPlayer).forEach(name => perPlayer[name].matchesVirtual = 0);
+   const firstRound = roundNumbers[0];
+
+   Object.keys(perPlayer).forEach(name => {
+     const entry = perPlayer[name];
+     const meta = playerMeta[name];
+     const arrivalRound = meta.arrivalRound;
+     if (arrivalRound <= firstRound) return;
+
+     const infoArrival = roundsInfo[arrivalRound];
+     if (!infoArrival) return;
+
+     const refPlayers = playersCache.filter(q => {
+       if (!q.name || q.name === name) return false;
+       const qCreated = typeof q.createdAt === "number" ? q.createdAt : 0;
+       return !qCreated || qCreated <= infoArrival.createdAtMin;
+     });
+     if (!refPlayers.length) return;
+
+     let sumMatches = 0, countPlayers = 0;
+     refPlayers.forEach(q => {
+       const qEntry = perPlayer[q.name];
+       if (!qEntry) return;
+       let count = 0;
+       roundNumbers.forEach(r => { if (r < arrivalRound && qEntry.typePerRound[r] === "played") count++; });
+       sumMatches += count;
+       countPlayers++;
+     });
+
+     entry.matchesVirtual += Math.round(countPlayers ? (sumMatches / countPlayers) : 0);
+   });
+
+   Object.keys(perPlayer).forEach(name => {
+     const entry = perPlayer[name];
+     const meta = playerMeta[name];
+     const leftRound = meta.leftRound;
+     const returnRound = meta.returnRound;
+
+     if (typeof leftRound !== "number" || typeof returnRound !== "number" || returnRound <= leftRound) return;
+
+     const windowRounds = roundNumbers.filter(r => r > leftRound && r < returnRound);
+     if (!windowRounds.length) return;
+
+     let windowCreatedAtMin = Infinity;
+     windowRounds.forEach(r => {
+       const inf = roundsInfo[r];
+       if (inf && inf.createdAtMin < windowCreatedAtMin) windowCreatedAtMin = inf.createdAtMin;
+     });
+     if (!isFinite(windowCreatedAtMin)) return;
+
+     const refPlayers = playersCache.filter(q => {
+       if (!q.name || q.name === name) return false;
+       const qCreated = typeof q.createdAt === "number" ? q.createdAt : 0;
+       return !qCreated || qCreated <= windowCreatedAtMin;
+     });
+     if (!refPlayers.length) return;
+
+     let sumMatches = 0, countPlayers = 0;
+     refPlayers.forEach(q => {
+       const qEntry = perPlayer[q.name];
+       if (!qEntry) return;
+       let count = 0;
+       windowRounds.forEach(r => { if (qEntry.typePerRound[r] === "played") count++; });
+       sumMatches += count;
+       countPlayers++;
+     });
+
+     entry.matchesVirtual += Math.round(countPlayers ? (sumMatches / countPlayers) : 0);
+   });
+
+   result.roundNumbers = roundNumbers;
+   result.roundsInfo = roundsInfo;
+   result.perPlayer = perPlayer;
+   return result;
+ }
+
+ function getBenchPlayersForRoundUI(roundNumber) {
+   if (!roundNumber || !playersCache.length || !matchesCache.length) return [];
+   const matchesOfRound = matchesCache.filter(m => m.roundNumber === roundNumber);
+   if (!matchesOfRound.length) return [];
+
+   let roundCreatedAtMin = Infinity;
+   const playersInMatches = new Set();
+
+   matchesOfRound.forEach(m => {
+     const cat = typeof m.createdAt === "number" ? m.createdAt : Date.now();
+     if (cat < roundCreatedAtMin) roundCreatedAtMin = cat;
+     (m.teamA || []).forEach(n => playersInMatches.add(n));
+     (m.teamB || []).forEach(n => playersInMatches.add(n));
+   });
+   if (!isFinite(roundCreatedAtMin)) return [];
+
+   const bench = [];
+   playersCache.forEach(p => {
+     const name = p.name;
+     if (!name) return;
+
+     const createdAt = typeof p.createdAt === "number" ? p.createdAt : 0;
+     const leftRound = typeof p.leftRound === "number" ? p.leftRound : null;
+     const returnRound = typeof p.returnRound === "number" ? p.returnRound : null;
+
+     if (createdAt && createdAt > roundCreatedAtMin) return;
+
+     if (typeof leftRound === "number") {
+       if (typeof returnRound === "number" && returnRound > leftRound) {
+         if (roundNumber > leftRound && roundNumber < returnRound) return;
+       } else {
+         if (roundNumber > leftRound) return;
+       }
+     }
+
+     if (playersInMatches.has(name)) return;
+     bench.push(name);
+   });
+
+   bench.sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
+   return bench;
+ }
+
+ function renderRoundsView() {
+   if (!matchesCache.length) {
+     currentRoundContainer.innerHTML = '<p class="small-label">Aucun match pour le moment.</p>';
+     previousRoundContainer.innerHTML = '<p class="small-label">Aucun match précédent trouvé.</p>';
+     nextRoundContainer.innerHTML = '<p class="small-label">Aucun match à venir enregistré.</p>';
+     return;
+   }
+
+   const roundsMap = {};
+   matchesCache.forEach(m => {
+     const r = m.roundNumber;
+     if (typeof r !== "number") return;
+     if (!roundsMap[r]) roundsMap[r] = { matches: [], allValidated: true };
+     roundsMap[r].matches.push(m);
+     if (m.validated !== true) roundsMap[r].allValidated = false;
+   });
+
+   const roundNumbers = Object.keys(roundsMap).map(Number).sort((a,b)=>a-b);
+   if (!roundNumbers.length) return;
+
+   const unvalidatedRounds = roundNumbers.filter(r => !roundsMap[r].allValidated);
+   const validatedRounds = roundNumbers.filter(r => roundsMap[r].allValidated);
+
+   let currentRoundNumber = unvalidatedRounds.length ? Math.min(...unvalidatedRounds) : null;
+
+   let previousRoundNumber = null;
+   if (currentRoundNumber !== null) {
+     const prevCandidates = validatedRounds.filter(r => r < currentRoundNumber);
+     if (prevCandidates.length) previousRoundNumber = Math.max(...prevCandidates);
+   } else if (validatedRounds.length) {
+     previousRoundNumber = Math.max(...validatedRounds);
+   }
+
+   let nextRoundNumber = null;
+   if (currentRoundNumber !== null) {
+     const nextCandidates = unvalidatedRounds.filter(r => r > currentRoundNumber);
+     if (nextCandidates.length) nextRoundNumber = Math.min(...nextCandidates);
+   }
+
+   const currentMatches = currentRoundNumber !== null ? roundsMap[currentRoundNumber].matches : [];
+   const previousMatches = previousRoundNumber !== null ? roundsMap[previousRoundNumber].matches : [];
+   const nextMatches = nextRoundNumber !== null ? roundsMap[nextRoundNumber].matches : [];
+
+   if (!currentMatches.length) {
+     currentRoundContainer.innerHTML = '<p class="small-label">Aucun match pour le tour en cours.</p>';
+   } else {
+     currentRoundContainer.innerHTML = "";
+     currentMatches.forEach(m => {
+       const card = document.createElement("div");
+       card.className = "match-card";
+
+       const header = document.createElement("div");
+       header.className = "match-header";
+       header.innerHTML = `<span>Tour ${m.roundNumber}</span><span>Terrain ${m.court}</span>`;
+
+       const teams = document.createElement("div");
+       teams.className = "match-teams";
+       teams.textContent = `${(m.teamA || []).join(" & ")}  vs  ${(m.teamB || []).join(" & ")}`;
+
+       const score = document.createElement("div");
+       score.className = "small-label";
+       const sA = (m.scoreA ?? "-");
+       const sB = (m.scoreB ?? "-");
+       score.textContent = `Score : ${sA} - ${sB} ${m.validated ? "(validé)" : ""}`;
+
+       card.appendChild(header);
+       card.appendChild(teams);
+       card.appendChild(score);
+       currentRoundContainer.appendChild(card);
+     });
+
+     const bench = getBenchPlayersForRoundUI(currentRoundNumber);
+     const benchDiv = document.createElement("div");
+     benchDiv.className = "small-label";
+     benchDiv.textContent = bench.length
+       ? `Joueurs sur le banc : ${bench.join(", ")}`
+       : "Aucun joueur sur le banc pour ce tour.";
+     currentRoundContainer.appendChild(benchDiv);
+   }
+
+   if (!previousMatches.length) {
+     previousRoundContainer.innerHTML = '<p class="small-label">Aucun match précédent trouvé.</p>';
+   } else {
+     previousRoundContainer.innerHTML = "";
+     previousMatches.forEach(m => {
+       const card = document.createElement("div");
+       card.className = "match-card";
+
+       const header = document.createElement("div");
+       header.className = "match-header";
+       header.innerHTML = `<span>Tour ${m.roundNumber}</span><span>Terrain ${m.court}</span>`;
+
+       const teams = document.createElement("div");
+       teams.className = "match-teams";
+       teams.textContent = `${(m.teamA || []).join(" & ")}  vs ${(m.teamB || []).join(" & ")}`;
+
+       const score = document.createElement("div");
+       score.className = "small-label";
+       score.textContent = `Score : ${m.scoreA ?? "-"} - ${m.scoreB ?? "-"}`;
+
+       card.appendChild(header);
+       card.appendChild(teams);
+       card.appendChild(score);
+       previousRoundContainer.appendChild(card);
+     });
+
+     const benchPrev = getBenchPlayersForRoundUI(previousRoundNumber);
+     const benchPrevDiv = document.createElement("div");
+     benchPrevDiv.className = "small-label";
+     benchPrevDiv.textContent = benchPrev.length
+       ? `Joueurs sur le banc : ${benchPrev.join(", ")}`
+       : "Aucun joueur sur le banc pour ce tour.";
+     previousRoundContainer.appendChild(benchPrevDiv);
+   }
+
+   if (!nextMatches.length) {
+     nextRoundContainer.innerHTML = '<p class="small-label">Aucun match à venir enregistré.</p>';
+   } else {
+     nextRoundContainer.innerHTML = "";
+     nextMatches.forEach(m => {
+       const card = document.createElement("div");
+       card.className = "match-card";
+
+       const header = document.createElement("div");
+       header.className = "match-header";
+       header.innerHTML = `<span>Tour ${m.roundNumber}</span><span>Terrain ${m.court}</span>`;
+
+       const teams = document.createElement("div");
+       teams.className = "match-teams";
+       teams.textContent = `${(m.teamA || []).join(" & ")}  vs ${(m.teamB || []).join(" & ")}`;
+
+       const score = document.createElement("div");
+       score.className = "small-label";
+       score.textContent = `Score prévu : ${m.scoreA ?? "-"} - ${m.scoreB ?? "-"}`;
+
+       card.appendChild(header);
+       card.appendChild(teams);
+       card.appendChild(score);
+       nextRoundContainer.appendChild(card);
+     });
+
+     const benchNext = getBenchPlayersForRoundUI(nextRoundNumber);
+     const benchNextDiv = document.createElement("div");
+     benchNextDiv.className = "small-label";
+     benchNextDiv.textContent = benchNext.length
+       ? `Joueurs sur le banc : ${benchNext.join(", ")}`
+       : "Aucun joueur sur le banc pour ce tour.";
+     nextRoundContainer.appendChild(benchNextDiv);
+   }
+ }
+
+ function renderMatchesHistory() {
+   if (!matchesCache.length) {
+     matchesHistoryContainer.innerHTML = '<p class="small-label">Aucun match enregistré pour le moment.</p>';
+     return;
+   }
+
+   let html = '<table><thead><tr><th>Tour</th><th>Terrain</th><th>Équipe A</th><th>Équipe B</th><th>Score</th><th>Statut</th></tr></thead><tbody>';
+   matchesCache.forEach(m => {
+     html += `
+       <tr>
+         <td>${m.roundNumber ?? ""}</td>
+         <td>${m.court ?? ""}</td>
+         <td>${(m.teamA || []).join(" & ")}</td>
+         <td>${(m.teamB || []).join(" & ")}</td>
+         <td>${m.scoreA ?? "-"} - ${m.scoreB ?? "-"}</td>
+         <td>${m.validated === true ? "Validé" : "En attente"}</td>
+       </tr>
+     `;
+   });
+   html += "</tbody></table>";
+   matchesHistoryContainer.innerHTML = html;
+ }
+
+ // --- Helpers Beach-Noël (champs tolérants) ---
+ function safeNum(x){ return (typeof x === "number" && !Number.isNaN(x)) ? x : 0; }
+ function getNoelNote(p){
+   return safeNum(p.noelNote ?? p.noteNoel ?? p.beachNoelNote ?? p.noteBeachNoel);
+ }
+ function getNoelBonus(p){
+   return safeNum(p.noelBonus ?? p.bonusNoel ?? p.beachNoelBonus ?? p.bonusBeachNoel);
+ }
+ function getNoelPoints(p){
+   // si pointsNoel existe, on le priorise, sinon on calcule note+bonus
+   const direct = p.pointsNoel;
+   if (typeof direct === "number" && !Number.isNaN(direct)) return direct;
+   return getNoelNote(p) + getNoelBonus(p);
+ }
+
+ function renderRankings(players) {
+   const containers = [rankingGeneralEl, rankingMenEl, rankingWomenEl, rankingNoelEl];
+   if (!players.length) {
+     containers.forEach(el => el.innerHTML = "<p>Aucun joueur pour le moment.</p>");
+     return;
+   }
+
+   const enriched = players.map(p => {
+     const pointsBT = safeNum(p.pointsGeneral);
+     const pointsNoel = getNoelPoints(p);     // total Beach-Noël
+     const bonusMalus = safeNum(p.bonusMalus); // gardé pour le total général, juste non affiché
+     const total = pointsBT + pointsNoel + bonusMalus;
+
+     return {
+       ...p,
+       pointsBT,
+       pointsNoel,
+       bonusMalus,
+       total,
+       noelNote: getNoelNote(p),
+       noelBonus: getNoelBonus(p)
+     };
+   });
+
+   const generalList = [...enriched].sort((a,b)=>b.total-a.total);
+   const menList = generalList.filter(p => p.gender === "H");
+   const womenList = generalList.filter(p => p.gender === "F");
+   const noelList = [...enriched].sort((a,b)=> (b.pointsNoel ?? 0) - (a.pointsNoel ?? 0));
+
+   function buildTableGeneral(list) {
+     if (!list.length) return "<p>Aucun joueur pour le moment.</p>";
+     let html = "<table><thead><tr>" +
+       "<th>#</th><th>Nom</th><th>Points BT</th><th>Points Beach-Noël</th><th>Total</th>" +
+       "</tr></thead><tbody>";
+     list.forEach((p, index) => {
+       html += `<tr>
+         <td>${index + 1}</td>
+         <td>${p.name || ""}</td>
+         <td>${p.pointsBT}</td>
+         <td>${p.pointsNoel}</td>
+         <td>${p.total}</td>
+       </tr>`;
+     });
+     html += "</tbody></table>";
+     return html;
+   }
+
+   function buildTableNoel(list) {
+     if (!list.length) return "<p>Aucun joueur pour le moment.</p>";
+     let html = "<table><thead><tr>" +
+       "<th>#</th><th>Nom</th><th>Note Beach-Noël</th><th>Bonus Beach-Noël</th><th>Points Beach-Noël</th>" +
+       "</tr></thead><tbody>";
+     list.forEach((p, index) => {
+       html += `<tr>
+         <td>${index + 1}</td>
+         <td>${p.name || ""}</td>
+         <td>${p.noelNote ?? 0}</td>
+         <td>${p.noelBonus ?? 0}</td>
+         <td>${p.pointsNoel ?? 0}</td>
+       </tr>`;
+     });
+     html += "</tbody></table>";
+     return html;
+   }
+
+   rankingGeneralEl.innerHTML = buildTableGeneral(generalList);
+   rankingMenEl.innerHTML = buildTableGeneral(menList);
+   rankingWomenEl.innerHTML = buildTableGeneral(womenList);
+   rankingNoelEl.innerHTML = buildTableNoel(noelList);
+ }
+
+ function renderStatsPointsBTPerRound(scoring) {
+   const roundNumbers = scoring.roundNumbers;
+   const perPlayer = scoring.perPlayer;
+
+   if (!roundNumbers.length || !Object.keys(perPlayer).length) {
+     statsPointsPerRoundEl.innerHTML = "<p>Aucun tour validé pour le moment.</p>";
+     return;
+   }
+
+   const names = Object.keys(perPlayer).sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
+
+   let html = "<table><thead><tr><th>Joueur</th>";
+   roundNumbers.forEach(r => html += `<th>Tour ${r}</th>`);
+   html += "<th>Total BT</th></tr></thead><tbody>";
+
+   names.forEach(name => {
+     const entry = perPlayer[name];
+     html += `<tr><td>${name}</td>`;
+     let total = 0;
+     roundNumbers.forEach(r => {
+       const pts = entry.pointsPerRound[r] ?? 0;
+       total += pts;
+       html += `<td>${pts}</td>`;
+     });
+     html += `<td>${total}</td></tr>`;
+   });
+
+   html += "</tbody></table>";
+   statsPointsPerRoundEl.innerHTML = html;
+ }
+
+ function renderStatsMatchesPlayed(scoring) {
+   const perPlayer = scoring.perPlayer;
+   if (!Object.keys(perPlayer).length) {
+     statsMatchesPlayedEl.innerHTML = "<p>Aucune donnée de matchs validés pour le moment.</p>";
+     return;
+   }
+
+   const names = Object.keys(perPlayer).sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
+   let html = "<table><thead><tr><th>Joueur</th><th>Matchs réels</th><th>Matchs virtuels</th><th>Total</th></tr></thead><tbody>";
+
+   names.forEach(name => {
+     const e = perPlayer[name];
+     const total = (e.matchesReal || 0) + (e.matchesVirtual || 0);
+     html += `<tr>
+       <td>${name}</td>
+       <td>${e.matchesReal || 0}</td>
+       <td>${e.matchesVirtual || 0}</td>
+       <td>${total}</td>
+     </tr>`;
+   });
+
+   html += "</tbody></table>";
+   statsMatchesPlayedEl.innerHTML = html;
+ }
+
+ function renderStatsPartners(scoring) {
+   const perPlayer = scoring.perPlayer;
+   if (!Object.keys(perPlayer).length) {
+     statsPartnersEl.innerHTML = "<p>Aucun match validé pour le moment.</p>";
+     return;
+   }
+
+   const names = Object.keys(perPlayer).sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
+   let html = "";
+
+   names.forEach(name => {
+     const entry = perPlayer[name];
+     const partners = entry.partners || {};
+     const partnerNames = Object.keys(partners).sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
+
+     html += `<h3>${name}</h3>`;
+     if (!partnerNames.length) {
+       html += '<p class="small-label">Aucun partenaire rencontré pour l\'instant.</p>';
+     } else {
+       html += '<table><thead><tr><th>Partenaire</th><th>Matchs joués ensemble</th></tr></thead><tbody>';
+       partnerNames.forEach(pn => {
+         html += `<tr><td>${pn}</td><td>${partners[pn]}</td></tr>`;
+       });
+       html += "</tbody></table>";
+     }
+   });
+
+   statsPartnersEl.innerHTML = html;
+ }
+
+ function renderStatsOpponents(scoring) {
+   const perPlayer = scoring.perPlayer;
+   if (!Object.keys(perPlayer).length) {
+     statsOpponentsEl.innerHTML = "<p>Aucun match validé pour le moment.</p>";
+     return;
+   }
+
+   const names = Object.keys(perPlayer).sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
+   let html = "";
+
+   names.forEach(name => {
+     const entry = perPlayer[name];
+     const opponents = entry.opponents || {};
+     const oppNames = Object.keys(opponents).sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
+
+     html += `<h3>${name}</h3>`;
+     if (!oppNames.length) {
+       html += '<p class="small-label">Aucun adversaire rencontré pour l\'instant.</p>';
+     } else {
+       html += '<table><thead><tr><th>Adversaire</th><th>Matchs joués contre</th></tr></thead><tbody>';
+       oppNames.forEach(on => {
+         html += `<tr><td>${on}</td><td>${opponents[on]}</td></tr>`;
+       });
+       html += "</tbody></table>";
+     }
+   });
+
+   statsOpponentsEl.innerHTML = html;
+ }
+
+ function renderStats() {
+   const scoring = buildScoringData();
+   renderStatsPointsBTPerRound(scoring);
+   renderStatsMatchesPlayed(scoring);
+   renderStatsPartners(scoring);
+   renderStatsOpponents(scoring);
+ }
+
+ // === Listeners Firestore (lecture seule) ===
+ const playersQuery = query(playersCol, orderBy("createdAt", "asc"));
+ onSnapshot(playersQuery, (snapshot) => {
+   playersCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+   renderRankings(playersCache);
+   renderStats();
+   renderRoundsView();
+ });
+
+ const matchesQuery = query(matchesCol, orderBy("createdAt", "asc"));
+ onSnapshot(matchesQuery, (snapshot) => {
+   matchesCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+   renderRoundsView();
+   renderMatchesHistory();
+   renderStats();
+ });
+</script>
+</body>
+</html>
