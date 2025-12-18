@@ -295,6 +295,22 @@
 Admin – Americano de Noël – Beach Tennis Suzini
 </header>
 
+<script>
+  const ADMIN_KEY = "Mel@nie";
+  const STORAGE_KEY = "admin_access_ok";
+
+  if (localStorage.getItem(STORAGE_KEY) !== "yes") {
+    const pwd = prompt("Accès Admin – Mot de passe :");
+    if (pwd !== ADMIN_KEY) {
+      alert("Accès refusé");
+      window.location.href = "index.html";
+    } else {
+      localStorage.setItem(STORAGE_KEY, "yes");
+    }
+  }
+</script>
+
+  
 <div class="container">
 <!-- Onglets principaux -->
 <div class="tabs">
