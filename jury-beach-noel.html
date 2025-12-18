@@ -140,6 +140,22 @@
  Jury – Classement Beach-Noël – Beach Tennis Suzini
 </header>
 
+<script>
+  const JURY_KEY = "JP@PSK";
+  const STORAGE_KEY = "jury_access_ok";
+
+  if (localStorage.getItem(STORAGE_KEY) !== "yes") {
+    const pwd = prompt("Accès Jury – Mot de passe :");
+    if (pwd !== JURY_KEY) {
+      alert("Accès refusé");
+      window.location.href = "index.html";
+    } else {
+      localStorage.setItem(STORAGE_KEY, "yes");
+    }
+  }
+</script>
+
+ 
 <div class="container">
  <!-- Onglets -->
  <div class="tabs">
